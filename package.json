@@ -1,0 +1,14 @@
+{
+  "name": "bitcoin-wallet-api",
+  "version": "1.0.0",
+  "main": "app.js",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.24.0",
+    "bip32": "^3.0.1",
+    "bitcoinjs-lib": "^6.0.1",
+    "dotenv": "^10.0.0",
+    "ecpair": "^2.0.1",
+    "tiny-secp256k1": "^2.1.2"
+  }
+}
