@@ -1,11 +1,11 @@
-const { BTC_TESTNET } = require('../config');
+const { TESTNET } = require('../config');
 const axios = require('axios');
 
 const API_BASE = 'https://chain.so/api/v2';
 
 const listAllUnspentByAddressChainSo = async (address) => {
     try {
-        const network = BTC_TESTNET ? 'BTCTEST' : 'BTC';
+        const network = TESTNET ? 'BTCTEST' : 'BTC';
         const endpoint = `${API_BASE}/get_tx_unspent/${network}/${String(address)}`;
 
         const { data } = await axios.get(endpoint);
@@ -21,6 +21,26 @@ const listAllUnspentByAddressChainSo = async (address) => {
             status: 'success',
             utxos
         };
+    } catch (err) {
+        const data = err?.response?.data;
+        return {
+            status: 'fail',
+            message: err.message,
+            data,
+        };
+    }
+}
+
+const listAllUnspentForAddresses = async (addresses) => {
+    try {
+        const listUnspents = {};
+        for (const address of addresses) {
+            const data = await listAllUnspentByAddressChainSo(address);
+            if (data.status === 'success') {
+                listUnspents[address] = data.utxos;
+            }
+        }
+        return listUnspents;
     } catch (err) {
         const data = err?.response?.data;
         return {
@@ -63,5 +83,6 @@ const listUnspentByAddressForAmount = async (address, value) => {
 
 module.exports = {
     listAllUnspentByAddressChainSo,
+    listAllUnspentForAddresses,
     listUnspentByAddressForAmount,
 }
